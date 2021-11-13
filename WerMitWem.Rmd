@@ -1,0 +1,55 @@
+---
+title: "Weihnachtswichteln"
+output: html_notebook
+---
+
+
+
+```{r}
+set.seed(2021)
+SchenkerList <- c("Christoph","Solange","Aline","Moritz","Soeren","Mirella","Lars","Jessi")
+exclusionList <- list("Christoph" = c("Christoph","Solange"), 
+                      "Solange"= c("Solange","Christoph"),
+                      "Aline"= c("Aline","Moritz"),
+                      "Moritz"= c("Moritz","Aline"),
+                      "Soeren"= c("Soeren","Mirella"),
+                      "Mirella"= c("Mirella","Soeren"),
+                      "Bayer"= c("Bayer","Jessi"),
+                      "Jessi" = c("Jessi","Bayer")
+                      )
+
+setwd("/home/knalli/Desktop/Wichteln2021")
+
+hit <- FALSE
+Beschenkter <- c()
+for (n in SchenkerList) {
+	search = TRUE
+	innerCounter <- 0
+	while (search == TRUE) {
+		innerCounter <- innerCounter + 1
+		test <- sample(SchenkerList, 1)
+		if (test != n & !is.element(test, c(Beschenkter, exclusionList[n] ))) {
+			Beschenkter <- c(Beschenkter, test)
+			search <- FALSE
+		}
+		
+		if (innerCounter > 50) {
+			search <- FALSE
+		}
+	}
+}
+
+#View(data.frame(SchenkerList,Beschenkter))
+print(length(unique(Beschenkter))==length(unique(Beschenkter)))
+
+for (SchenkerIndex in seq(1:length(SchenkerList))) {
+	print(SchenkerList[SchenkerIndex]!=Beschenkter[SchenkerIndex])
+  textContent <- paste("\n Moment bist du ",SchenkerList[SchenkerIndex],"? Wenn nicht schaem dich!!! \n", "Falls doch, du hast",Beschenkter[SchenkerIndex], "gezogen. \n Dein Geschenk sollte mit dem Buchstaben.... \n Jop, netter Versuch! Schau dir das Video an, dann weisst du es! \n", sep = " ")
+	#print(textContent)
+  write.table(textContent, file = paste0(SchenkerList[SchenkerIndex],".txt"),   row.names = FALSE, col.names = FALSE)
+}
+
+```
+
+
+
